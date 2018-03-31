@@ -19,6 +19,7 @@ copy-conf-force:
 
 add-user:
 	getent passwd ${USER} || adduser --disabled-password --gecos ",,," ${USER}
+	adduser ${USER} kvm
 
 delete-files:
 	rm /etc/init.d/android-emulator || true
