@@ -1,6 +1,7 @@
 
-RCFILE=/etc/android_emulator.rc
-USER=androidemulator
+RCFILE?=/etc/android_emulator.rc
+USER?=androidemulator
+ANDROID_SDK?=~/Android/Sdk
 
 install: copy-rc copy-conf add-user
 uninstall: delete-files del-user
@@ -13,7 +14,10 @@ copy-conf:
 	test -f ${RCFILE} || ${MAKE} copy-conf-force
 
 copy-conf-force:
-	echo "ANDROID_SDK=~/Android/Sdk" > ${RCFILE}
+	echo "# if you update this file run: " > ${RCFILE}
+	echo "$ sudo /etc/init.d/android-emulator install" >> ${RCFILE}
+	echo "to ensure that all the SDK dependencies are installed" >> ${RCFILE}
+	echo "ANDROID_SDK=${ANDROID_SDK}" >> ${RCFILE}
 	echo "RUNAS=${USER}" >> ${RCFILE}
 	cat default_configs >> ${RCFILE}
 

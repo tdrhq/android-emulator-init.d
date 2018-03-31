@@ -32,7 +32,7 @@ start_emulator() {
     if [ x$SHOULD_UPDATE_SDK = x1 ] ; then
 	# note that this *will* slow down your boot process. If it fails (because we don't have permission to write to the SDK)
 	# we will still continue to run
-	su -c "$ANDROID_SDK/tools/bin/sdkmanager --install  emulator 'system-images;$TARGET_SDK;google_apis;x86_64'" "$RUNAS" > $LOGFILE 2>&1 || exit 0
+	install
     fi
 
     su -c "$ANDROID_SDK/tools/bin/avdmanager create avd -d 'Nexus 5X' -f -n 'default_emulator' -b 'x86_64' -k 'system-images;$TARGET_SDK;google_apis;x86_64' -c $SDCARD_SIZE" "$RUNAS" > $LOGFILE 2>&1 || exit 1
@@ -46,6 +46,11 @@ start_emulator() {
     CMD="$ANDROID_SDK/emulator/emulator @default_emulator -skin ${width}x${height} -partition-size $PARTITIONSIZE -no-window &> $LOGFILE  & echo \$!"
     su -c "$CMD" "$RUNAS" > "$PIDFILE"
     log_daemon_msg "Started android emulator"
+}
+
+install() {
+    OWNER=`stat -c '%U' $ANDROID_SDK`
+    su -c "$ANDROID_SDK/tools/bin/sdkmanager --install  emulator 'system-images;$TARGET_SDK;google_apis;x86_64'" "$OWNER"
 }
 
 stop_emulator() {
@@ -65,6 +70,9 @@ case "$1" in
   ;;
   stop)
 	stop_emulator
+  ;;
+  install)
+      install
   ;;
   restart|force-reload)
     $0 stop
