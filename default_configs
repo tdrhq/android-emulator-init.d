@@ -1,0 +1,14 @@
+TARGET_SDK=android-24
+PIDFILE=/var/run/android_emulator.pid
+LOGFILE=/var/log/android_emulator.log
+SHOULD_UPDATE_SDK=0
+SDCARD_SIZE=100M
+PARTITIONSIZE=500
+
+# Turning this on will probably give you reliable, and always
+# up-to-date emulators, but will slow down your boot process. So might
+# not be the best idea.
+SHOULD_UPDATE_SDK=0
+
+# Switch out the adb server port if you so desire.
+# export ANDROID_ADB_SERVER_PORT=9090
